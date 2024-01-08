@@ -1,7 +1,13 @@
 const tables = {
-  userTable: "userTable"
+  userTable: "User",
+  roleTable: "Role"
+};
+const roles = {
+  Admin: 1,
+  User: 2
 };
 
 module.exports = {
-  tables
+  tables,
+  roles
 };
