@@ -18,4 +18,16 @@ require("./swagger/swagger")(app);
 //routes
 app.use("/", userRouter);
 
-app.listen(PORT, () => console.log(`🚀 Server is up and running on port ${PORT} 🚀 `));
+const initApp = async () => {
+  try {
+    require("./core/db.js");
+    /**
+     * Start the web server on the specified port.
+     */
+    app.listen(PORT, () => console.log(`🚀 Server is up and running on port ${PORT} 🚀 `));
+  } catch (error) {
+    console.error("Unable to connect to the database:", error.original);
+  }
+};
+
+initApp();
