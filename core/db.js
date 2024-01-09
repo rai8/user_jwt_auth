@@ -47,5 +47,6 @@ const User = userTable(sequelize, Sequelize);
 
 module.exports = {
   op,
+  sequelize,
   User
 };
