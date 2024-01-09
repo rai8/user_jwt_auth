@@ -1,5 +1,5 @@
 const { statusCode, roles } = require("../constants/constants");
-const { User } = require("../core/db");
+const { User, Role } = require("../core/db");
 const response = require("../response/response");
 const { hashPassword } = require("../utils/password");
 
@@ -13,9 +13,8 @@ module.exports = {
     try {
       // check if email already exists
       const userExists = await this.findUserByEmailId(req.body.email);
-      if (userExists) {
-        throw response.customError(statusCode.BAD_REQUEST, "User with that email already exists", "User with that email already exists");
-      }
+      if (userExists) throw response.customError(statusCode.BAD_REQUEST, "User with that email already exists", "User with that email already exists");
+
       await User.create(
         {
           firstName: req.body.firstName,
@@ -39,7 +38,20 @@ module.exports = {
    */
   findUserByEmailId: async function (emailId) {
     try {
-      const user = await User.findOne({ where: { email: emailId } });
+      const user = await User.findOne({ where: { email: emailId, isArchived: false } });
+      return user;
+    } catch (error) {
+      return { error: error };
+    }
+  },
+
+  /**
+   * Find user by userId
+   * @param {*} req
+   */
+  findUserByUserId: async function (userId) {
+    try {
+      const user = await User.findOne({ where: { user: userId, isArchived: false } });
       return user;
     } catch (error) {
       return { error: error };
@@ -50,8 +62,10 @@ module.exports = {
    * Get all user records
    * @param {*} req
    */
-  getAllUserRecords: async function (req) {
+  getAllUserRecords: async function () {
     try {
+      const users = await User.findAll({ attributes: ["userId", "firstName", "lastName", "email", "isArchived"], where: { isArchived: false }, include: [{ model: Role, as: "userRole", where: { isArchived: false } }] });
+      return users;
     } catch (error) {
       return { error: error };
     }
@@ -61,19 +75,11 @@ module.exports = {
    * Get single record
    * @param {*} req
    */
-  getUserRecord: async function (req, transaction) {
+  getUserRecord: async function (req) {
     try {
-    } catch (error) {
-      return { error: error };
-    }
-  },
-
-  /**
-   * Update user data
-   * @param {*} req
-   */
-  updateUserRecord: async function (req, transaction) {
-    try {
+      const user = await User.findOne({ attributes: ["userId", "firstName", "lastName", "email", "isArchived"], where: { userId: req.params.userId, isArchived: false }, include: [{ model: Role, as: "userRole", where: { isArchived: false } }] });
+      if (!user) throw response.customError(statusCode.NOT_FOUND, "User does not exist", "User does not exist");
+      return user;
     } catch (error) {
       return { error: error };
     }

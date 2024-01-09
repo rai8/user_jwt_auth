@@ -5,7 +5,9 @@ const userService = require("../service/user.service");
 
 module.exports = {
   healthCheck,
-  createUserRecord
+  createUserRecord,
+  getAllUserRecords,
+  getUserRecord
 };
 /**
  * @swagger
@@ -87,6 +89,83 @@ async function createUserRecord(req, res) {
     } else {
       await transaction.commit();
       return res.status(statusCode.SUCCESS).json(response.successWith(result, statusCode.SUCCESS, "User created successfully", "User created successfully"));
+    }
+  } catch (error) {
+    console.log(error?.message);
+  }
+}
+
+/**
+ * @swagger
+ * /users/fetch:
+ *  get:
+ *    tags:
+ *       - "Fetch users records"
+ *    summary: Get all users records
+ *    produces:
+ *      - application/json
+ *    parameters:
+ *      - in: header
+ *        name: authorization
+ *        type: string
+ *        description: authorization
+ *    responses:
+ *        200:
+ *           description: Healthy Service
+ *        503:
+ *           description: Unhealthy Service
+ */
+async function getAllUserRecords(req, res) {
+  try {
+    const result = await userService.getAllUserRecords();
+    if (result.error) {
+      let httpStatusCode = statusCode.SERVER_ERROR;
+      if (result.error.errorCode) httpStatusCode = result.error.errorCode;
+      return res.status(httpStatusCode).json(response.errorWith(null, httpStatusCode, result.error.message, result.error.displayMessage));
+    } else {
+      return res.status(statusCode.SUCCESS).json(response.successWith(result, statusCode.SUCCESS, "Users record fetched successfully", "Users record fetched successfully"));
+    }
+  } catch (error) {
+    console.log(error?.message);
+  }
+}
+
+/**
+ * @swagger
+ * /user/fetch/{userId}:
+ *  get:
+ *    tags:
+ *       - "Fetch user record"
+ *    summary: Get single user record
+ *    produces:
+ *      - application/json
+ *    consumes:
+ *      - application/json
+ *    parameters:
+ *      - in: path
+ *        name: userId
+ *        type: number
+ *        required: true
+ *        description: User Id
+ *      - in: header
+ *        name: authorization
+ *        type: string
+ *        description: authorization
+ *    responses:
+ *        200:
+ *           description: Healthy Service
+ *        503:
+ *           description: Unhealthy Service
+ */
+async function getUserRecord(req, res) {
+  try {
+    const result = await userService.getUserRecord(req);
+    if (result.error) {
+      let httpStatusCode = statusCode.SERVER_ERROR;
+      if (result.error.errorCode) httpStatusCode = result.error.errorCode;
+      return res.status(httpStatusCode).json(response.errorWith(null, httpStatusCode, result.error.message, result.error.displayMessage));
+    } else {
+      return res.status(statusCode.SUCCESS).json(response.successWith(result, statusCode.SUCCESS, "Users record fetched successfully", "Users record fetched successfully"));
     }
   } catch (error) {
     console.log(error?.message);

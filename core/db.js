@@ -42,11 +42,17 @@ sequelize
 const op = Sequelize.Op;
 
 const userTable = require("../models/user.model");
+const roleTable = require("../models/role.model");
 
 const User = userTable(sequelize, Sequelize);
+const Role = roleTable(sequelize, Sequelize);
+
+//Relationships
+User.belongsTo(Role, { as: "userRole", foreignKey: "roleId" });
 
 module.exports = {
   op,
   sequelize,
-  User
+  User,
+  Role
 };

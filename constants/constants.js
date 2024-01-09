@@ -14,7 +14,8 @@ const statusCode = {
   NOT_FOUND: 404,
   SERVER_ERROR: 500,
   BAD_REQUEST: 400,
-  SESSION_EXPIRED: 440
+  SESSION_EXPIRED: 440,
+  UNAUTHORIZED_ACCESS: 401
 };
 module.exports = {
   tables,

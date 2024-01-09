@@ -1,42 +1,41 @@
 const passport = require("passport");
 const { ExtractJwt, Strategy } = require("passport-jwt");
 const { User } = require("./db");
-const { roles } = require("../constants/constants");
+const constants = require("../constants/constants");
+const response = require("../response/response");
 
 module.exports.applyPassportStrategy = (passport) => {
   const options = {};
   options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
   options.secretOrKey = process.env.JWT_SECRET;
+  options.passReqToCallback = true;
 
-  //Admin strategy
-  passport.use(
-    "admin",
-    new Strategy(options, async (payload, next) => {
-      const user = await User.findOne({ where: { email: payload.email, roleId: roles.Admin } });
-      if (user) {
-        next(null, user);
-      } else {
-        next(null, false);
-      }
-    })
-  );
-
-  // Standard user strategy
   passport.use(
     "user",
     new Strategy(options, async (payload, next) => {
-      const user = await User.findOne({ where: { email: payload.email, roleId: roles.User } });
-      if (user) {
-        next(null, user);
-      } else {
-        next(null, false);
+      try {
+        const user = await User.findOne({ where: { userId: payload.userId, isArchived: false } });
+        if (user) {
+          next(null, user);
+        } else {
+          next(null, false);
+        }
+      } catch (error) {
+        next(error, false);
       }
     })
   );
 };
 
-module.exports.authMiddlewareAdmin = passport.authenticate("admin", { session: false });
-module.exports.authMiddlewareUser = passport.authenticate("user", { session: false });
+module.exports.verifyToken = (req, res, next) => {
+  passport.authenticate("user", { session: false }, (err, user) => {
+    let httpStatusCode = constants.statusCode.UNAUTHORIZED_ACCESS;
+    if (err) return res.status(httpStatusCode).json(response.errorWith(null, httpStatusCode, "Internal server error", "Internal server error"));
+    if (!user) return res.status(httpStatusCode).json(response.errorWith(null, httpStatusCode, "Unauthorized access. Please contact your administrator", "Unauthorized access. Please contact your administrator"));
+    req.user = user;
+    return next();
+  })(req, res, next);
+};
 
 //perform user serialization
 passport.serializeUser(function (user, done) {

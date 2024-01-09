@@ -41,10 +41,9 @@ app.use("/api", userRouter);
 app.use((req, res, next) => {
   res.status(404);
   if (req.accepts("json")) {
-    res.json({ error: "URL Not found" });
-    return;
+    return res.status(httpStatusCode).json(response.errorWith(null, 404, "URL Not found", "URL Not found"));
   }
-  // next()
+  next();
 });
 
 const initApp = async () => {
