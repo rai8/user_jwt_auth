@@ -20,7 +20,7 @@ module.exports = {
         {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
-          roleId: roles.User,
+          roleId: req.body.roleId,
           email: req.body.email,
           password: hashPassword(req.body.password),
           isArchived: false

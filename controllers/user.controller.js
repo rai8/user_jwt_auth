@@ -42,7 +42,7 @@ async function healthCheck(req, res) {
  * /user/create:
  *  post:
  *    tags:
- *       - "Crete user"
+ *       - "Create user"
  *    summary: Create user
  *    produces:
  *      - application/json
@@ -51,12 +51,13 @@ async function healthCheck(req, res) {
  *    parameters:
  *      - in: body
  *        name: Crete user
- *        description: Cretaing user record
+ *        description: Creating user record
  *        schema:
  *           type: object
  *           required:
  *              - firstName
  *              - lastName
+ *              - roleId
  *              - email
  *              - password
  *           properties:
@@ -68,6 +69,9 @@ async function healthCheck(req, res) {
  *                 type: string
  *               password:
  *                 type: string
+ *               roleId:
+ *                 type: number
+ *                 default: 2
  *    responses:
  *        200:
  *           description: Success Response

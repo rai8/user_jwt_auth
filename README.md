@@ -78,8 +78,11 @@ Before you begin, ensure you have met the following requirements:
     PRIMARY KEY ("userId")
     );
 
-   INSERT INTO "Role" ("roleId","roleName","isArchived") VALUES (1,'Admin',false);
-   INSERT INTO "Role" ("roleId","roleName","isArchived") VALUES (2,'User',false);
+  INSERT INTO "Role" ("roleId","roleName","isArchived") VALUES (1,'Admin',false);
+  INSERT INTO "Role" ("roleId","roleName","isArchived") VALUES (2,'User',false);
+
+  INSERT INTO "User" ("userId","firstName", "lastName", "roleId","email", "password", "isArchived")
+  VALUES (DEFAULT, 'Admin', 'User', 1, 'admin@gmail.com','$2a$10$LkJFootOsEzpPnPtyvuku7BaxF0gMLr1/CohhVZH81x3PX9QdSeq', false );
 ```
 
 ## Run the Application
@@ -95,3 +98,10 @@ The application will be accessible at http://localhost:8082 by default.
 ## API Documentation
 
 API documentation is generated using Swagger. Visit http://localhost:8082/api/swagger/v1/ to explore and test the APIs.
+
+1. Login credentials for default admin user
+
+```bash
+  email admin@gmail.com
+  password admin123
+```
