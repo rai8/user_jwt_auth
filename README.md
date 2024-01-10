@@ -17,7 +17,7 @@ Before you begin, ensure you have met the following requirements:
 
 - Node.js installed (version >= 16)
 - npm (Node Package Manager) / Yarn installed
-- nodemon installed
+- nodemon installed for dev environment
 - PostgreSQL installed and running
 
 ## Installation
@@ -81,3 +81,17 @@ Before you begin, ensure you have met the following requirements:
    INSERT INTO "Role" ("roleId","roleName","isArchived") VALUES (1,'Admin',false);
    INSERT INTO "Role" ("roleId","roleName","isArchived") VALUES (2,'User',false);
 ```
+
+## Run the Application
+
+1. Start the application:
+
+```bash
+  npm start
+```
+
+The application will be accessible at http://localhost:8082 by default.
+
+## API Documentation
+
+API documentation is generated using Swagger. Visit http://localhost:8082/api/swagger/v1/ to explore and test the APIs.
