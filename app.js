@@ -9,11 +9,10 @@ const { applyPassportStrategy } = require("./core/passport.js");
 //Set session store
 app.use(
   session({
-    store: new (require("connect-pg-simple")(session))(),
     secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
+    saveUninitialized: true,
     resave: false,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
+    cookie: { secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 }
   })
 );
 
