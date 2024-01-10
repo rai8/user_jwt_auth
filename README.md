@@ -18,7 +18,7 @@ Before you begin, ensure you have met the following requirements:
 - Node.js installed (version >= 16)
 - npm (Node Package Manager) / Yarn installed
 - nodemon installed for dev environment
-- PostgreSQL installed and running
+- PostgreSQL installed and running (version >= 15.3)
 
 ## Installation
 
