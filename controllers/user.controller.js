@@ -7,7 +7,8 @@ module.exports = {
   healthCheck,
   createUserRecord,
   getAllUserRecords,
-  getUserRecord
+  getUserRecord,
+  userLogin
 };
 /**
  * @swagger
@@ -85,7 +86,7 @@ async function createUserRecord(req, res) {
       let httpStatusCode = statusCode.SERVER_ERROR;
       await transaction.rollback();
       if (result.error.errorCode) httpStatusCode = result.error.errorCode;
-      return res.status(httpStatusCode).json(response.errorWith(httpStatusCode, result.error.message, result.error.displayMessage));
+      return res.status(httpStatusCode).json(response.errorWith(null, httpStatusCode, result.error.message, result.error.displayMessage));
     } else {
       await transaction.commit();
       return res.status(statusCode.SUCCESS).json(response.successWith(result, statusCode.SUCCESS, "User created successfully", "User created successfully"));
@@ -166,6 +167,56 @@ async function getUserRecord(req, res) {
       return res.status(httpStatusCode).json(response.errorWith(null, httpStatusCode, result.error.message, result.error.displayMessage));
     } else {
       return res.status(statusCode.SUCCESS).json(response.successWith(result, statusCode.SUCCESS, "Users record fetched successfully", "Users record fetched successfully"));
+    }
+  } catch (error) {
+    console.log(error?.message);
+  }
+}
+
+/**
+ * @swagger
+ * /user/login:
+ *  post:
+ *    tags:
+ *       - "User login"
+ *    summary: User login
+ *    produces:
+ *      - application/json
+ *    consumes:
+ *      - application/json
+ *    parameters:
+ *      - in: body
+ *        name: Login user
+ *        description: Login user
+ *        schema:
+ *           type: object
+ *           required:
+ *              - email
+ *              - password
+ *           properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *    responses:
+ *        200:
+ *           description: Success Response
+ *        400:
+ *           description: Bad request
+ *        401:
+ *           description: Unauthorized access
+ *        404:
+ *           description: Not Found
+ */
+async function userLogin(req, res) {
+  try {
+    const result = await userService.userLogin(req);
+    if (result.error) {
+      let httpStatusCode = statusCode.SERVER_ERROR;
+      if (result.error.errorCode) httpStatusCode = result.error.errorCode;
+      return res.status(httpStatusCode).json(response.errorWith(null, httpStatusCode, result.error.message, result.error.displayMessage));
+    } else {
+      return res.status(statusCode.SUCCESS).json(response.successWith(result, statusCode.SUCCESS, "Login successful", "Login successful"));
     }
   } catch (error) {
     console.log(error?.message);

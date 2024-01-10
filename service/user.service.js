@@ -1,7 +1,8 @@
 const { statusCode, roles } = require("../constants/constants");
 const { User, Role } = require("../core/db");
 const response = require("../response/response");
-const { hashPassword } = require("../utils/password");
+const { hashPassword, comparePassword } = require("../utils/password");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   /**
@@ -80,6 +81,29 @@ module.exports = {
       const user = await User.findOne({ attributes: ["userId", "firstName", "lastName", "email", "isArchived"], where: { userId: req.params.userId, isArchived: false }, include: [{ model: Role, as: "userRole", where: { isArchived: false } }] });
       if (!user) throw response.customError(statusCode.NOT_FOUND, "User does not exist", "User does not exist");
       return user;
+    } catch (error) {
+      return { error: error };
+    }
+  },
+
+  /**
+   * User login
+   * @param {*} req
+   * @param {*} transaction
+   */
+  userLogin: async function (req) {
+    try {
+      const user = await this.findUserByEmailId(req.body.email);
+      if (!user) throw response.customError(statusCode.NOT_FOUND, "Invalid account details", "Invalid account details");
+
+      //compare if passwords match
+      const isValidPassword = comparePassword(req.body.password, user?.password);
+      if (!isValidPassword) throw response.customError(statusCode.NOT_FOUND, "Invalid password", "Invalid password");
+
+      // jwt signin
+      const token = jwt.sign({ email: user?.email, roleId: user?.roleId, userId: user?.userId }, process.env.JWT_SECRET, { expiresIn: "24hr" });
+      const userObj = { userId: user?.userId, email: user?.email, roleId: user?.roleId, token };
+      return userObj;
     } catch (error) {
       return { error: error };
     }
