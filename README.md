@@ -26,4 +26,8 @@ Before you begin, ensure you have met the following requirements:
 
 ```bash
    git clone https://github.com/your-username/your-project.git
+   cd your-project
+   npm install
 ```
+
+## Installation
