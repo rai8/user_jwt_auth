@@ -105,6 +105,8 @@ async function createUserRecord(req, res) {
  *    summary: Get all users records
  *    produces:
  *      - application/json
+ *    consumes:
+ *      - application/json
  *    parameters:
  *      - in: header
  *        name: authorization
