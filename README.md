@@ -43,3 +43,41 @@ Before you begin, ensure you have met the following requirements:
    JWT_SECRET=your_jwt_secret
    SESSION_SECRET=your_session_secret
 ```
+
+## Database Setup
+
+1. Create the PostgreSQL database:
+
+```bash
+  CREATE DATABASE your_database_name ;
+```
+
+2. Run scripts
+
+```bash
+  CREATE DATABASE your_database_name ;
+  \c your_database_name ;
+  CREATE TABLE IF NOT EXISTS "Role" (
+    "roleId"  SERIAL ,
+    "roleName" VARCHAR(100) NOT NULL,
+    "isArchived" BOOLEAN NOT NULL,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    PRIMARY KEY ("roleId")
+    );
+  CREATE TABLE IF NOT EXISTS "User" (
+    "userId"  SERIAL ,
+    "firstName" VARCHAR(100),
+    "lastName" VARCHAR(100),
+    "roleId" INTEGER REFERENCES "Role" ("roleId") ON DELETE NO ACTION ON UPDATE CASCADE,
+    "email" VARCHAR(50),
+    "password" VARCHAR(225),
+    "isArchived" BOOLEAN NOT NULL,
+    "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    PRIMARY KEY ("userId")
+    );
+
+   INSERT INTO "Role" ("roleId","roleName","isArchived") VALUES (1,'Admin',false);
+   INSERT INTO "Role" ("roleId","roleName","isArchived") VALUES (2,'User',false);
+```
