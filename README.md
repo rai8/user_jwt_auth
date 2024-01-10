@@ -102,6 +102,6 @@ API documentation is generated using Swagger. Visit http://localhost:8082/api/sw
 1. Login credentials for default admin user
 
 ```bash
-  email admin@gmail.com
-  password admin123
+  email: admin@gmail.com
+  password: admin123
 ```
