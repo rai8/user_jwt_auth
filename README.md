@@ -25,9 +25,21 @@ Before you begin, ensure you have met the following requirements:
 1. Clone the repository:
 
 ```bash
-   git clone https://github.com/your-username/your-project.git
+   git clone https://github.com/rai8/user_jwt_auth.git
    cd your-project
    npm install
 ```
 
-## Installation
+## Configuration
+
+1. Create a .env file in the project root and configure the following variables:
+
+```bash
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_NAME=your_database_name
+   DB_USER=your_database_user
+   DB_PASSWORD=your_database_password
+   JWT_SECRET=your_jwt_secret
+   SESSION_SECRET=your_session_secret
+```
